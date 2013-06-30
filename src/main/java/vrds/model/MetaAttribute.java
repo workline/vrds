@@ -8,16 +8,17 @@ import javax.persistence.ManyToOne;
 @DiscriminatorValue("META")
 public class MetaAttribute extends Attribute {
     @ManyToOne
-    private MetaAttributeDefinition metaAttributeDefinition;
+    private MetaAttributeDefinition definition;
     @ManyToOne
     private Attribute ownerAttribute;
 
-    public MetaAttributeDefinition getMetaAttributeDefinition() {
-        return metaAttributeDefinition;
+    @Override
+    public MetaAttributeDefinition getDefinition() {
+        return definition;
     }
 
-    public void setMetaAttributeDefinition(MetaAttributeDefinition repoAttributeDefinition) {
-        this.metaAttributeDefinition = repoAttributeDefinition;
+    public void setDefinition(MetaAttributeDefinition definition) {
+        this.definition = definition;
     }
 
     public Attribute getOwnerAttribute() {
@@ -30,9 +31,9 @@ public class MetaAttribute extends Attribute {
 
     @Override
     public String toString() {
-        return "MetaAttribute [metaAttributeDefinitionName=" + (metaAttributeDefinition == null ? "N/A" : metaAttributeDefinition.getName()) + ", "
-                + "ownerAttributeId=" + (ownerAttribute == null ? "N/A" : ownerAttribute.getId()) + ", id=" + id + ", stringValues=" + stringValues
-                + ", repoItemValues=" + repoItemValues + "]";
+        return "MetaAttribute [definitionName=" + (definition == null ? "N/A" : definition.getName()) + ", " + "ownerAttributeId="
+                + (ownerAttribute == null ? "N/A" : ownerAttribute.getId()) + ", id=" + id + ", stringValues=" + stringValues + ", repoItemValues="
+                + repoItemValues + "]";
     }
 
 }

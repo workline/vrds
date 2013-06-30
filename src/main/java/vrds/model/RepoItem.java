@@ -16,44 +16,58 @@ public class RepoItem {
     @Id
     @GeneratedValue
     private Long id;
+
     @ManyToOne
-    private RepoDefinition repoDefinition;
+    private RepoDefinition definition;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "repoItem")
     private Set<RepoItemAttribute> repoItemAttributes;
 
-    @SuppressWarnings("unchecked")
-    public <T> T getAttributeTypedValue(String attributeDefinitionName) {
-        return (T) getRepoItemAttributeValue(attributeDefinitionName);
-    }
-
-    public Object getRepoItemAttributeValue(String attributeDefinitionName) {
-        Object attributeValue;
+    public RepoItemAttribute getAttribute(String attributeDefinitionName) {
+        RepoItemAttribute repoItemAttribute;
 
         if (attributeDefinitionName == null || "".equals(attributeDefinitionName.trim())) {
-            attributeValue = null;
+            repoItemAttribute = null;
         } else {
-            attributeValue = null;
+            repoItemAttribute = null;
 
             boolean found = false;
             Iterator<RepoItemAttribute> attributesIterator = repoItemAttributes.iterator();
 
             while(!found && attributesIterator.hasNext()) {
                 RepoItemAttribute currentAttribute = attributesIterator.next();
-                String currentAttributeDefinitionName = currentAttribute.getRepoAttributeDefinition().getName();
+                String currentAttributeDefinitionName = currentAttribute.getDefinition().getName();
 
                 if (attributeDefinitionName.equals(currentAttributeDefinitionName)) {
-                    attributeValue = currentAttribute.getValue();
+                    repoItemAttribute = currentAttribute;
                     found = true;
                 }
             }
         }
 
+        return repoItemAttribute;
+    }
+
+    public Object getValue(String attributeDefinitionName) {
+        Object attributeValue = getAttribute(attributeDefinitionName).getValue();
+
         return attributeValue;
     }
 
-    public void setRepoItemAttributeValue(String attributeDefinitionName, Object value) {
+    public Set<IValue<Object>> getValues(String attributeDefinitionName) {
+        Set<IValue<Object>> attributeValues = getAttribute(attributeDefinitionName).getValues();
+
+        return attributeValues;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getTypedValue(String attributeDefinitionName) {
+        return (T) getValue(attributeDefinitionName);
+    }
+
+    public void setValue(String attributeDefinitionName, Object value) {
         for (RepoItemAttribute currentAttribute : repoItemAttributes) {
-            String currentAttributeDefinitionName = currentAttribute.getRepoAttributeDefinition().getName();
+            String currentAttributeDefinitionName = currentAttribute.getDefinition().getName();
             if (attributeDefinitionName.equals(currentAttributeDefinitionName)) {
                 currentAttribute.setValue(value);
                 break;
@@ -69,12 +83,12 @@ public class RepoItem {
         this.id = id;
     }
 
-    public RepoDefinition getRepoDefinition() {
-        return repoDefinition;
+    public RepoDefinition getDefinition() {
+        return definition;
     }
 
-    public void setRepoDefinition(RepoDefinition repoDefinition) {
-        this.repoDefinition = repoDefinition;
+    public void setDefinition(RepoDefinition repoDefinition) {
+        this.definition = repoDefinition;
     }
 
     public Set<RepoItemAttribute> getRepoItemAttributes() {
@@ -90,8 +104,8 @@ public class RepoItem {
 
     @Override
     public String toString() {
-        return "RepoItem [id=" + id + ", repoDefinitionName=" + (repoDefinition == null ? "N/A" : repoDefinition.getName()) + ", repoItemAttributes="
-                + repoItemAttributes + "]";
+        return "RepoItem [id=" + id + ", definitionName=" + (definition == null ? "N/A" : definition.getName()) + ", repoItemAttributes=" + repoItemAttributes
+                + "]";
     }
 
 }

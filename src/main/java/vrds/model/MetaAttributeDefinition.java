@@ -1,26 +1,24 @@
 package vrds.model;
 
+import java.util.Set;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 
 @Entity
 @DiscriminatorValue("META")
 public class MetaAttributeDefinition extends AttributeDefinition {
-    @ManyToOne
-    private AttributeDefinition ownerAttributeDefinition;
+    @ManyToMany(mappedBy = "metaAttributeDefinitions")
+    private Set<AttributeDefinition> ownerAttributeDefinitions;
 
-    public AttributeDefinition getOwnerAttributeDefinition() {
-        return ownerAttributeDefinition;
-    }
-
-    public void setOwnerAttributeDefinition(AttributeDefinition ownerAttributeDefinition) {
-        this.ownerAttributeDefinition = ownerAttributeDefinition;
+    public Set<AttributeDefinition> getOwnerAttributeDefinitions() {
+        return ownerAttributeDefinitions;
     }
 
     @Override
     public String toString() {
-        return "MetaAttributeDefinition [ownerAttributeDefinitionName=" + (ownerAttributeDefinition == null ? "N/A" : ownerAttributeDefinition.getName())
+        return "MetaAttributeDefinition [ownerAttributeDefinitionNr=" + (ownerAttributeDefinitions == null ? "N/A" : ownerAttributeDefinitions.size())
                 + ", id=" + id + ", name=" + name + ", type=" + type + ", valueRepoType=" + valueRepoType + ", multiValue=" + multiValue + ", mandatory="
                 + mandatory + ", metaAttributeDefinitions=" + metaAttributeDefinitions + "]";
     }

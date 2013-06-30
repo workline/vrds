@@ -12,8 +12,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -33,7 +35,8 @@ public abstract class AttributeDefinition {
     protected Integer multiValue = 0;
     @Column
     protected Integer mandatory = 0;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttributeDefinition")
+    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @JoinTable(name = "J_META_ATTR_DEF", joinColumns = { @JoinColumn(name = "ATTR_DEF_ID") }, inverseJoinColumns = { @JoinColumn(name = "META_ATTR_DEF_ID") })
     protected Set<MetaAttributeDefinition> metaAttributeDefinitions;
 
     public Long getId() {
@@ -93,9 +96,6 @@ public abstract class AttributeDefinition {
 
     public void setMetaAttributeDefinitions(Set<MetaAttributeDefinition> metaAttributeDefinitions) {
         this.metaAttributeDefinitions = metaAttributeDefinitions;
-        for (MetaAttributeDefinition metaAttributeDefinition : metaAttributeDefinitions) {
-            metaAttributeDefinition.setOwnerAttributeDefinition(this);
-        }
     }
 
     @Override

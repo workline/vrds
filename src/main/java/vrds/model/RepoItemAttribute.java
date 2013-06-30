@@ -8,16 +8,17 @@ import javax.persistence.ManyToOne;
 @DiscriminatorValue("REPO")
 public class RepoItemAttribute extends Attribute {
     @ManyToOne
-    private RepoAttributeDefinition repoAttributeDefinition;
+    private RepoAttributeDefinition definition;
     @ManyToOne
     private RepoItem repoItem;
 
-    public RepoAttributeDefinition getRepoAttributeDefinition() {
-        return repoAttributeDefinition;
+    @Override
+    public RepoAttributeDefinition getDefinition() {
+        return definition;
     }
 
-    public void setRepoAttributeDefinition(RepoAttributeDefinition repoAttributeDefinition) {
-        this.repoAttributeDefinition = repoAttributeDefinition;
+    public void setDefinition(RepoAttributeDefinition definition) {
+        this.definition = definition;
     }
 
     public RepoItem getRepoItem() {
@@ -30,9 +31,8 @@ public class RepoItemAttribute extends Attribute {
 
     @Override
     public String toString() {
-        return "RepoItemAttribute [repoAttributeDefinitionName=" + (repoAttributeDefinition == null ? "N/A" : repoAttributeDefinition.getName())
-                + ", repoItemId=" + (repoItem == null ? "N/A" : repoItem.getId()) + ", id=" + id + ", stringValues=" + stringValues + ", repoItemValues="
-                + repoItemValues + "]";
+        return "RepoItemAttribute [definitionName=" + (definition == null ? "N/A" : definition.getName()) + ", repoItemId="
+                + (repoItem == null ? "N/A" : repoItem.getId()) + ", id=" + id + ", stringValues=" + stringValues + ", repoItemValues=" + repoItemValues + "]";
     }
 
 }

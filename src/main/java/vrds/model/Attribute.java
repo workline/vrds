@@ -1,6 +1,7 @@
 package vrds.model;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -19,12 +20,16 @@ public abstract class Attribute {
     @Id
     @GeneratedValue
     protected Long id;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
     protected Set<MetaAttribute> metaAttributes;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "attribute")
     protected Set<StringValue> stringValues;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
     protected Set<RepoItemValue> repoItemValues;
+
+    public abstract AttributeDefinition getDefinition();
 
     // TODO Add rest of the dependencies
 
@@ -32,12 +37,12 @@ public abstract class Attribute {
         Object value;
 
         @SuppressWarnings("unchecked")
-        Set<? extends IValue<Object>>[] valueSets = new Set[] { stringValues, repoItemValues };
+        Set<IValue<Object>>[] valueSets = new Set[] { stringValues, repoItemValues };
 
         value = null;
         boolean found = false;
         for (int listIndex = 0; !found && listIndex < valueSets.length; listIndex++) {
-            Set<? extends IValue<Object>> valueSet = valueSets[listIndex];
+            Set<IValue<Object>> valueSet = valueSets[listIndex];
             value = getValue(valueSet);
 
             if (value != null) {
@@ -65,7 +70,50 @@ public abstract class Attribute {
         }
     }
 
-    // TODO getValues();
+    public Set<IValue<Object>> getValues() {
+        Set<IValue<Object>> values;
+
+        @SuppressWarnings("unchecked")
+        Set<IValue<Object>>[] valueSets = new Set[] { stringValues, repoItemValues };
+
+        values = null;
+        boolean found = false;
+        for (int listIndex = 0; !found && listIndex < valueSets.length; listIndex++) {
+            Set<IValue<Object>> valueSet = valueSets[listIndex];
+
+            if (valueSet != null && !valueSet.isEmpty()) {
+                values = valueSet;
+                found = true;
+            }
+        }
+
+        return values;
+    }
+
+    public MetaAttribute getMetaAttribute(String attributeDefinitionName) {
+        MetaAttribute metaAttribute;
+
+        if (attributeDefinitionName == null || "".equals(attributeDefinitionName.trim())) {
+            metaAttribute = null;
+        } else {
+            metaAttribute = null;
+
+            boolean found = false;
+            Iterator<MetaAttribute> attributesIterator = metaAttributes.iterator();
+
+            while(!found && attributesIterator.hasNext()) {
+                MetaAttribute currentMetaAttribute = attributesIterator.next();
+                String currentMetaAttributeDefinitionName = currentMetaAttribute.getDefinition().getName();
+
+                if (attributeDefinitionName.equals(currentMetaAttributeDefinitionName)) {
+                    metaAttribute = currentMetaAttribute;
+                    found = true;
+                }
+            }
+        }
+
+        return metaAttribute;
+    }
 
     public Long getId() {
         return id;
