@@ -9,16 +9,19 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 @Inheritance
 @DiscriminatorColumn(name = "ATTRIBUTE_TYPE")
+@SequenceGenerator(name = "attributeIdSequenceGenerator", sequenceName = "SEQ_ATTRIBUTE_ID", initialValue = 1, allocationSize = 1000)
 public abstract class Attribute {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attributeIdSequenceGenerator")
     protected Long id;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")

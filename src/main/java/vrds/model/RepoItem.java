@@ -7,14 +7,17 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 
 @Entity
+@SequenceGenerator(name = "repoItemIdSequenceGenerator", sequenceName = "SEQ_REPO_ITEM_ID", initialValue = 1, allocationSize = 1000)
 public class RepoItem {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "repoItemIdSequenceGenerator")
     private Long id;
 
     @ManyToOne
