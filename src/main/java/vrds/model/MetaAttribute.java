@@ -4,6 +4,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @DiscriminatorValue("META")
 public class MetaAttribute extends Attribute {
@@ -12,6 +14,7 @@ public class MetaAttribute extends Attribute {
     @ManyToOne
     private Attribute ownerAttribute;
 
+    @JsonIgnore
     @Override
     public MetaAttributeDefinition getDefinition() {
         return definition;
@@ -21,6 +24,7 @@ public class MetaAttribute extends Attribute {
         this.definition = definition;
     }
 
+    @JsonIgnore
     public Attribute getOwnerAttribute() {
         return ownerAttribute;
     }

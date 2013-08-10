@@ -59,13 +59,13 @@ public abstract class Attribute {
     public void setValue(Object value) {
         if (value != null) {
             if (value instanceof String) {
-                setStringValue((String) value);
+                _setStringValue((String) value);
             } else if (value instanceof StringValue) {
-                setStringValue((StringValue) value);
+                _setStringValue((StringValue) value);
             } else if (value instanceof RepoItem) {
-                setRepoItemValue((RepoItem) value);
+                _setRepoItemValue((RepoItem) value);
             } else if (value instanceof RepoItemValue) {
-                setRepoItemValue((RepoItemValue) value);
+                _setRepoItemValue((RepoItemValue) value);
             } else {
                 // TODO Have an appropriate exception
                 throw new IllegalArgumentException();
@@ -173,15 +173,15 @@ public abstract class Attribute {
 
     // TODO getValues();
 
-    private void setStringValue(String value) {
+    private void _setStringValue(String value) {
         StringValue stringValue = new StringValue();
         stringValue.setValue(value);
         stringValue.setAttribute(this);
 
-        setStringValue(stringValue);
+        _setStringValue(stringValue);
     }
 
-    private void setStringValue(StringValue stringValue) {
+    private void _setStringValue(StringValue stringValue) {
         if (stringValues == null) {
             Set<StringValue> stringValues = new HashSet<StringValue>();
             stringValues.add(stringValue);
@@ -192,15 +192,15 @@ public abstract class Attribute {
         }
     }
 
-    private void setRepoItemValue(RepoItem repoItem) {
+    private void _setRepoItemValue(RepoItem repoItem) {
         RepoItemValue repoItemValue = new RepoItemValue();
         repoItemValue.setValue(repoItem);
         repoItemValue.setOwnerAttribute(this);
 
-        setRepoItemValue(repoItemValue);
+        _setRepoItemValue(repoItemValue);
     }
 
-    private void setRepoItemValue(RepoItemValue repoItemValue) {
+    private void _setRepoItemValue(RepoItemValue repoItemValue) {
         if (repoItemValues == null) {
             Set<RepoItemValue> repoItemValues = new HashSet<RepoItemValue>();
             repoItemValues.add(repoItemValue);

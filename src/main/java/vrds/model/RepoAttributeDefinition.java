@@ -12,8 +12,6 @@ public class RepoAttributeDefinition extends AttributeDefinition {
     @ManyToOne
     private RepoDefinition ownerRepoDefinition;
 
-    // TODO Y U NO work?
-    // @JsonSerialize(using = RepoDefinitionJsonSerializer.class)
     @JsonIgnore
     public RepoDefinition getOwnerRepoDefinition() {
         return ownerRepoDefinition;

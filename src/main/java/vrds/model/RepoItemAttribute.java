@@ -4,6 +4,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @DiscriminatorValue("REPO")
 public class RepoItemAttribute extends Attribute {
@@ -12,6 +14,7 @@ public class RepoItemAttribute extends Attribute {
     @ManyToOne
     private RepoItem repoItem;
 
+    @JsonIgnore
     @Override
     public RepoAttributeDefinition getDefinition() {
         return definition;
@@ -21,6 +24,7 @@ public class RepoItemAttribute extends Attribute {
         this.definition = definition;
     }
 
+    @JsonIgnore
     public RepoItem getRepoItem() {
         return repoItem;
     }

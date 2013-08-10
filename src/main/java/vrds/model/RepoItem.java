@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @SequenceGenerator(name = "repoItemIdSequenceGenerator", sequenceName = "SEQ_REPO_ITEM_ID", initialValue = 1, allocationSize = 1000)
 public class RepoItem {
@@ -86,6 +88,7 @@ public class RepoItem {
         this.id = id;
     }
 
+    @JsonIgnore
     public RepoDefinition getDefinition() {
         return definition;
     }

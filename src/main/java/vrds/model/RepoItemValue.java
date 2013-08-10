@@ -50,8 +50,8 @@ public class RepoItemValue implements IValue<RepoItem> {
 
     @Override
     public String toString() {
-        return "RepoItemValue [id=" + id + ", ownerAttributeId=" + (ownerAttribute == null ? "N/A" : ownerAttribute.getId())
-                + ", valueId=" + (value == null ? "N/A" : value.getId()) + "]";
+        return "RepoItemValue [id=" + id + ", ownerAttributeId=" + (ownerAttribute == null ? "N/A" : ownerAttribute.getId()) + ", valueId="
+                + (value == null ? "N/A" : value.getId()) + "]";
     }
 
 }

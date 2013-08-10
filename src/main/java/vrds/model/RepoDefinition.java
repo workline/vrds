@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 public class RepoDefinition {
     @Id
@@ -16,6 +18,7 @@ public class RepoDefinition {
     private Long id;
     private String name;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerRepoDefinition")
+    @JsonIgnore
     private Set<RepoAttributeDefinition> repoAttributeDefinitions;
 
     public Long getId() {

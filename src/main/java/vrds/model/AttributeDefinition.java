@@ -63,8 +63,6 @@ public abstract class AttributeDefinition {
         this.type = type;
     }
 
-    // TODO Y U NO work?
-    // @JsonSerialize(using = RepoDefinitionJsonSerializer.class)
     @JsonIgnore
     public RepoDefinition getValueRepoType() {
         return valueRepoType;
