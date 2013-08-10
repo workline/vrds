@@ -34,7 +34,7 @@ public abstract class Attribute {
 
     public abstract AttributeDefinition getDefinition();
 
-    // TODO Add rest of the dependencies!
+    // TODO Add rest of the dependencies
 
     public Object getValue() {
         Object value;
