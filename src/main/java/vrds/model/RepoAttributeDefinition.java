@@ -9,7 +9,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @DiscriminatorValue("REPO")
 public class RepoAttributeDefinition extends AttributeDefinition {
-    @ManyToOne
+	private static final long serialVersionUID = 1L;
+	
+	@ManyToOne
     private RepoDefinition ownerRepoDefinition;
 
     @JsonIgnore

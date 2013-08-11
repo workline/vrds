@@ -1,5 +1,7 @@
 package vrds.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +13,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @SequenceGenerator(name = "stringValueIdSequenceGenerator", sequenceName = "SEQ_STRING_VALUE_ID", initialValue = 1, allocationSize = 1000)
-public class StringValue implements IValue<String> {
+public class StringValue implements IValue<String>, Serializable {
+	private static final long serialVersionUID = 1L;
+	
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stringValueIdSequenceGenerator")
     private Long id;

@@ -1,5 +1,6 @@
 package vrds.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,7 +13,9 @@ import javax.persistence.OneToMany;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
-public class RepoDefinition {
+public class RepoDefinition implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
     @Id
     @GeneratedValue
     private Long id;

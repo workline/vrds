@@ -1,5 +1,6 @@
 package vrds.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -22,7 +23,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @Inheritance
 @DiscriminatorColumn(name = "ATTRIBUTE_TYPE")
-public abstract class AttributeDefinition {
+public abstract class AttributeDefinition implements Serializable {
+	private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue
     protected Long id;

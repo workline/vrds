@@ -1,5 +1,6 @@
 package vrds.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -17,8 +18,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @SequenceGenerator(name = "repoItemIdSequenceGenerator", sequenceName = "SEQ_REPO_ITEM_ID", initialValue = 1, allocationSize = 1000)
-public class RepoItem {
-    @Id
+public class RepoItem implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "repoItemIdSequenceGenerator")
     private Long id;
 

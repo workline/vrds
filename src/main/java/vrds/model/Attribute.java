@@ -1,5 +1,6 @@
 package vrds.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -19,7 +20,9 @@ import javax.persistence.SequenceGenerator;
 @Inheritance
 @DiscriminatorColumn(name = "ATTRIBUTE_TYPE")
 @SequenceGenerator(name = "attributeIdSequenceGenerator", sequenceName = "SEQ_ATTRIBUTE_ID", initialValue = 1, allocationSize = 1000)
-public abstract class Attribute {
+public abstract class Attribute implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attributeIdSequenceGenerator")
     protected Long id;

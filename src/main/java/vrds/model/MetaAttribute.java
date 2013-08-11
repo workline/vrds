@@ -1,5 +1,7 @@
 package vrds.model;
 
+import java.io.Serializable;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -9,6 +11,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @DiscriminatorValue("META")
 public class MetaAttribute extends Attribute {
+	private static final long serialVersionUID = 1L;
+
     @ManyToOne
     private MetaAttributeDefinition definition;
     @ManyToOne

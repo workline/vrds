@@ -9,7 +9,9 @@ import javax.persistence.ManyToMany;
 @Entity
 @DiscriminatorValue("META")
 public class MetaAttributeDefinition extends AttributeDefinition {
-    @ManyToMany(mappedBy = "metaAttributeDefinitions")
+	private static final long serialVersionUID = 1L;
+	
+	@ManyToMany(mappedBy = "metaAttributeDefinitions")
     private Set<AttributeDefinition> ownerAttributeDefinitions;
 
     public Set<AttributeDefinition> getOwnerAttributeDefinitions() {
