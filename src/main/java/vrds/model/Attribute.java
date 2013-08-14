@@ -1,7 +1,9 @@
 package vrds.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -43,13 +45,12 @@ public abstract class Attribute implements Serializable {
     public Object getValue() {
         Object value;
 
-        @SuppressWarnings("unchecked")
-        Set<IValue<Object>>[] valueSets = new Set[] { stringValues, repoItemValues };
+        List<Set<IValue<Object>>> valueSetList = gatherValueSets();
 
         value = null;
         boolean found = false;
-        for (int listIndex = 0; !found && listIndex < valueSets.length; listIndex++) {
-            Set<IValue<Object>> valueSet = valueSets[listIndex];
+        for (int listIndex = 0; !found && listIndex < valueSetList.size(); listIndex++) {
+            Set<IValue<Object>> valueSet = valueSetList.get(listIndex);
             value = getValue(valueSet);
 
             if (value != null) {
@@ -67,12 +68,12 @@ public abstract class Attribute implements Serializable {
     public Set<IValue<Object>> getValues() {
         Set<IValue<Object>> values;
 
-        Set<IValue<Object>>[] valueSets = gatherValueSets();
+        List<Set<IValue<Object>>> valueSetList = gatherValueSets();
 
         values = null;
         boolean found = false;
-        for (int listIndex = 0; !found && listIndex < valueSets.length; listIndex++) {
-            Set<IValue<Object>> valueSet = valueSets[listIndex];
+        for (int listIndex = 0; !found && listIndex < valueSetList.size(); listIndex++) {
+            Set<IValue<Object>> valueSet = valueSetList.get(listIndex);
 
             if (valueSet != null && !valueSet.isEmpty()) {
                 values = valueSet;
@@ -111,9 +112,9 @@ public abstract class Attribute implements Serializable {
     // TODO Add rest of the dependencies
 
     public void clearValues() {
-        Set<IValue<Object>>[] valueSets = gatherValueSets();
+        List<Set<IValue<Object>>> valueSetList = gatherValueSets();
 
-        for (Set<IValue<Object>> set : valueSets) {
+        for (Set<IValue<Object>> set : valueSetList) {
             if (set != null) {
                 set.clear();
             }
@@ -172,11 +173,13 @@ public abstract class Attribute implements Serializable {
         }
     }
 
-    private Set<IValue<Object>>[] gatherValueSets() {
+    private List<Set<IValue<Object>>> gatherValueSets() {
         @SuppressWarnings("unchecked")
         Set<IValue<Object>>[] valueSets = new Set[] { stringValues, repoItemValues, attributeValues };
 
-        return valueSets;
+        List<Set<IValue<Object>>> valueSetList = Arrays.asList(valueSets);
+
+        return valueSetList;
     }
 
     private <T, V extends IValue<T>> T getValue(Set<V> set) {
@@ -193,12 +196,12 @@ public abstract class Attribute implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder toStringBuilder = new StringBuilder("Attribute [id=" + id);
+        StringBuilder toStringBuilder = new StringBuilder(getToStringPrefix());
 
-        Set<IValue<Object>>[] valueSets = gatherValueSets();
+        List<Set<IValue<Object>>> valueSetList = gatherValueSets();
 
         int setIndex = 0;
-        for (Set<IValue<Object>> set : valueSets) {
+        for (Set<IValue<Object>> set : valueSetList) {
             toStringBuilder.append(", values" + setIndex + "=" + set);
             setIndex++;
         }
@@ -206,5 +209,9 @@ public abstract class Attribute implements Serializable {
         toStringBuilder.append("]");
 
         return toStringBuilder.toString();
+    }
+
+    protected String getToStringPrefix() {
+        return "Attribute [id=" + id;
     }
 }

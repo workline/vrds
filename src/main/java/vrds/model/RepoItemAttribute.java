@@ -36,9 +36,8 @@ public class RepoItemAttribute extends Attribute {
     }
 
     @Override
-    public String toString() {
+    protected String getToStringPrefix() {
         return "RepoItemAttribute [definitionName=" + (definition == null ? "N/A" : definition.getName()) + ", repoItemId="
-                + (repoItem == null ? "N/A" : repoItem.getId()) + ", id=" + id + ", stringValues=" + stringValues + ", repoItemValues=" + repoItemValues + "]";
+                + (repoItem == null ? "N/A" : repoItem.getId()) + ", id=" + id;
     }
-
 }

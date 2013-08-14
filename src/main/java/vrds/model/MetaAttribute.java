@@ -36,10 +36,8 @@ public class MetaAttribute extends Attribute {
     }
 
     @Override
-    public String toString() {
+    protected String getToStringPrefix() {
         return "MetaAttribute [definitionName=" + (definition == null ? "N/A" : definition.getName()) + ", " + "ownerAttributeId="
-                + (ownerAttribute == null ? "N/A" : ownerAttribute.getId()) + ", id=" + id + ", stringValues=" + stringValues + ", repoItemValues="
-                + repoItemValues + "]";
+                + (ownerAttribute == null ? "N/A" : ownerAttribute.getId()) + ", id=" + id;
     }
-
 }
