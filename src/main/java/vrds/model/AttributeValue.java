@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
-public class RepoItemValue implements IValue<RepoItem>, Serializable {
+public class AttributeValue implements IValue<Attribute>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -19,7 +19,7 @@ public class RepoItemValue implements IValue<RepoItem>, Serializable {
 	@ManyToOne
 	private Attribute ownerAttribute;
 	@ManyToOne
-	private RepoItem value;
+	private Attribute value;
 
 	public Long getId() {
 		return id;
@@ -39,11 +39,11 @@ public class RepoItemValue implements IValue<RepoItem>, Serializable {
 	}
 
 	@JsonIgnore
-	public RepoItem getValue() {
+	public Attribute getValue() {
 		return value;
 	}
 
-	public void setValue(RepoItem value) {
+	public void setValue(Attribute value) {
 		this.value = value;
 	}
 
