@@ -9,29 +9,25 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @DiscriminatorValue("REPO")
 public class RepoAttributeDefinition extends AttributeDefinition {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@ManyToOne
-	private RepoDefinition ownerRepoDefinition;
+    @ManyToOne
+    private RepoDefinition ownerRepoDefinition;
 
-	@JsonIgnore
-	public RepoDefinition getOwnerRepoDefinition() {
-		return ownerRepoDefinition;
-	}
+    @JsonIgnore
+    public RepoDefinition getOwnerRepoDefinition() {
+        return ownerRepoDefinition;
+    }
 
-	public void setOwnerRepoDefinition(RepoDefinition repoDefinition) {
-		this.ownerRepoDefinition = repoDefinition;
-	}
+    public void setOwnerRepoDefinition(RepoDefinition repoDefinition) {
+        this.ownerRepoDefinition = repoDefinition;
+    }
 
-	@Override
-	public String toString() {
-		return "RepoAttributeDefinition [ownerRepoDefinitionName="
-				+ (ownerRepoDefinition == null ? "N/A" : ownerRepoDefinition
-						.getName()) + ", id=" + id + ", name=" + name
-				+ ", type=" + type + ", valueRepoType=" + valueRepoType
-				+ ", multiValue=" + multiValue + ", mandatory=" + mandatory
-				+ ", metaAttributeDefinitions=" + metaAttributeDefinitions
-				+ "]";
-	}
+    @Override
+    public String toString() {
+        return "RepoAttributeDefinition [ownerRepoDefinitionName=" + (ownerRepoDefinition == null ? "N/A" : ownerRepoDefinition.getName()) + ", id=" + id
+                + ", name=" + name + ", type=" + type + ", valueRepoType=" + valueRepoType + ", multiValue=" + multiValue + ", mandatory=" + mandatory
+                + ", metaAttributeDefinitions=" + metaAttributeDefinitions + "]";
+    }
 
 }

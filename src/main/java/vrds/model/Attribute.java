@@ -20,197 +20,191 @@ import javax.persistence.SequenceGenerator;
 @DiscriminatorColumn(name = "ATTRIBUTE_TYPE")
 @SequenceGenerator(name = "attributeIdSequenceGenerator", sequenceName = "SEQ_ATTRIBUTE_ID", initialValue = 1, allocationSize = 1000)
 public abstract class Attribute implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attributeIdSequenceGenerator")
-	protected Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attributeIdSequenceGenerator")
+    protected Long id;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
-	protected Set<MetaAttribute> metaAttributes;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
+    protected Set<MetaAttribute> metaAttributes;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
-	protected Set<StringValue> stringValues;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
-	protected Set<RepoItemValue> repoItemValues;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
-	protected Set<AttributeValue> attributeValues;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
+    protected Set<StringValue> stringValues;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
+    protected Set<RepoItemValue> repoItemValues;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
+    protected Set<AttributeValue> attributeValues;
 
-	public abstract AttributeDefinition getDefinition();
+    public abstract AttributeDefinition getDefinition();
 
-	// TODO Add rest of the dependencies
+    // TODO Add rest of the dependencies
 
-	public Object getValue() {
-		Object value;
+    public Object getValue() {
+        Object value;
 
-		@SuppressWarnings("unchecked")
-		Set<IValue<Object>>[] valueSets = new Set[] { stringValues,
-				repoItemValues };
+        @SuppressWarnings("unchecked")
+        Set<IValue<Object>>[] valueSets = new Set[] { stringValues, repoItemValues };
 
-		value = null;
-		boolean found = false;
-		for (int listIndex = 0; !found && listIndex < valueSets.length; listIndex++) {
-			Set<IValue<Object>> valueSet = valueSets[listIndex];
-			value = getValue(valueSet);
+        value = null;
+        boolean found = false;
+        for (int listIndex = 0; !found && listIndex < valueSets.length; listIndex++) {
+            Set<IValue<Object>> valueSet = valueSets[listIndex];
+            value = getValue(valueSet);
 
-			if (value != null) {
-				found = true;
-			}
-		}
+            if (value != null) {
+                found = true;
+            }
+        }
 
-		return value;
-	}
+        return value;
+    }
 
-	public void setValue(Object value) {
-		EAttributeType.setValue(value, this);
-	}
+    public void setValue(Object value) {
+        EAttributeType.setValue(value, this);
+    }
 
-	public Set<IValue<Object>> getValues() {
-		Set<IValue<Object>> values;
+    public Set<IValue<Object>> getValues() {
+        Set<IValue<Object>> values;
 
-		Set<IValue<Object>>[] valueSets = gatherValueSets();
+        Set<IValue<Object>>[] valueSets = gatherValueSets();
 
-		values = null;
-		boolean found = false;
-		for (int listIndex = 0; !found && listIndex < valueSets.length; listIndex++) {
-			Set<IValue<Object>> valueSet = valueSets[listIndex];
+        values = null;
+        boolean found = false;
+        for (int listIndex = 0; !found && listIndex < valueSets.length; listIndex++) {
+            Set<IValue<Object>> valueSet = valueSets[listIndex];
 
-			if (valueSet != null && !valueSet.isEmpty()) {
-				values = valueSet;
-				found = true;
-			}
-		}
+            if (valueSet != null && !valueSet.isEmpty()) {
+                values = valueSet;
+                found = true;
+            }
+        }
 
-		return values;
-	}
+        return values;
+    }
 
-	public MetaAttribute getMetaAttribute(String attributeDefinitionName) {
-		MetaAttribute metaAttribute;
+    public MetaAttribute getMetaAttribute(String attributeDefinitionName) {
+        MetaAttribute metaAttribute;
 
-		if (attributeDefinitionName == null
-				|| "".equals(attributeDefinitionName.trim())) {
-			metaAttribute = null;
-		} else {
-			metaAttribute = null;
+        if (attributeDefinitionName == null || "".equals(attributeDefinitionName.trim())) {
+            metaAttribute = null;
+        } else {
+            metaAttribute = null;
 
-			boolean found = false;
-			Iterator<MetaAttribute> attributesIterator = metaAttributes
-					.iterator();
+            boolean found = false;
+            Iterator<MetaAttribute> attributesIterator = metaAttributes.iterator();
 
-			while (!found && attributesIterator.hasNext()) {
-				MetaAttribute currentMetaAttribute = attributesIterator.next();
-				String currentMetaAttributeDefinitionName = currentMetaAttribute
-						.getDefinition().getName();
+            while(!found && attributesIterator.hasNext()) {
+                MetaAttribute currentMetaAttribute = attributesIterator.next();
+                String currentMetaAttributeDefinitionName = currentMetaAttribute.getDefinition().getName();
 
-				if (attributeDefinitionName
-						.equals(currentMetaAttributeDefinitionName)) {
-					metaAttribute = currentMetaAttribute;
-					found = true;
-				}
-			}
-		}
+                if (attributeDefinitionName.equals(currentMetaAttributeDefinitionName)) {
+                    metaAttribute = currentMetaAttribute;
+                    found = true;
+                }
+            }
+        }
 
-		return metaAttribute;
-	}
+        return metaAttribute;
+    }
 
-	// TODO Add rest of the dependencies
+    // TODO Add rest of the dependencies
 
-	public void clearValues() {
-		Set<IValue<Object>>[] valueSets = gatherValueSets();
+    public void clearValues() {
+        Set<IValue<Object>>[] valueSets = gatherValueSets();
 
-		for (Set<IValue<Object>> set : valueSets) {
-			if (set != null) {
-				set.clear();
-			}
-		}
-	}
+        for (Set<IValue<Object>> set : valueSets) {
+            if (set != null) {
+                set.clear();
+            }
+        }
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Set<MetaAttribute> getMetaAttributes() {
-		return metaAttributes;
-	}
+    public Set<MetaAttribute> getMetaAttributes() {
+        return metaAttributes;
+    }
 
-	public void setMetaAttributes(Set<MetaAttribute> metaAttributes) {
-		this.metaAttributes = metaAttributes;
-		for (MetaAttribute metaAttribute : metaAttributes) {
-			metaAttribute.setOwnerAttribute(this);
-		}
-	}
+    public void setMetaAttributes(Set<MetaAttribute> metaAttributes) {
+        this.metaAttributes = metaAttributes;
+        for (MetaAttribute metaAttribute : metaAttributes) {
+            metaAttribute.setOwnerAttribute(this);
+        }
+    }
 
-	public Set<StringValue> getStringValues() {
-		return stringValues;
-	}
+    public Set<StringValue> getStringValues() {
+        return stringValues;
+    }
 
-	public void setStringValues(Set<StringValue> stringValues) {
-		this.stringValues = stringValues;
-		for (StringValue stringValue : stringValues) {
-			stringValue.setOwnerAttribute(this);
-		}
-	}
+    public void setStringValues(Set<StringValue> stringValues) {
+        this.stringValues = stringValues;
+        for (StringValue stringValue : stringValues) {
+            stringValue.setOwnerAttribute(this);
+        }
+    }
 
-	public Set<RepoItemValue> getRepoItemValues() {
-		return repoItemValues;
-	}
+    public Set<RepoItemValue> getRepoItemValues() {
+        return repoItemValues;
+    }
 
-	public void setRepoItemValues(Set<RepoItemValue> repoItemValues) {
-		this.repoItemValues = repoItemValues;
-		for (RepoItemValue repoItemValue : repoItemValues) {
-			repoItemValue.setOwnerAttribute(this);
-		}
-	}
+    public void setRepoItemValues(Set<RepoItemValue> repoItemValues) {
+        this.repoItemValues = repoItemValues;
+        for (RepoItemValue repoItemValue : repoItemValues) {
+            repoItemValue.setOwnerAttribute(this);
+        }
+    }
 
-	public Set<AttributeValue> getAttributeValues() {
-		return attributeValues;
-	}
+    public Set<AttributeValue> getAttributeValues() {
+        return attributeValues;
+    }
 
-	public void setAttributeValues(Set<AttributeValue> attributeValues) {
-		this.attributeValues = attributeValues;
-		for (AttributeValue attributeValue : attributeValues) {
-			attributeValue.setOwnerAttribute(this);
-		}
-	}
+    public void setAttributeValues(Set<AttributeValue> attributeValues) {
+        this.attributeValues = attributeValues;
+        for (AttributeValue attributeValue : attributeValues) {
+            attributeValue.setOwnerAttribute(this);
+        }
+    }
 
-	private Set<IValue<Object>>[] gatherValueSets() {
-		@SuppressWarnings("unchecked")
-		Set<IValue<Object>>[] valueSets = new Set[] { stringValues,
-				repoItemValues, attributeValues };
+    private Set<IValue<Object>>[] gatherValueSets() {
+        @SuppressWarnings("unchecked")
+        Set<IValue<Object>>[] valueSets = new Set[] { stringValues, repoItemValues, attributeValues };
 
-		return valueSets;
-	}
+        return valueSets;
+    }
 
-	private <T, V extends IValue<T>> T getValue(Set<V> set) {
-		T value;
+    private <T, V extends IValue<T>> T getValue(Set<V> set) {
+        T value;
 
-		if (set != null && !set.isEmpty()) {
-			value = set.iterator().next().getValue();
-		} else {
-			value = null;
-		}
+        if (set != null && !set.isEmpty()) {
+            value = set.iterator().next().getValue();
+        } else {
+            value = null;
+        }
 
-		return value;
-	}
+        return value;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder toStringBuilder = new StringBuilder("Attribute [id=" + id);
+    @Override
+    public String toString() {
+        StringBuilder toStringBuilder = new StringBuilder("Attribute [id=" + id);
 
-		Set<IValue<Object>>[] valueSets = gatherValueSets();
+        Set<IValue<Object>>[] valueSets = gatherValueSets();
 
-		int setIndex = 0;
-		for (Set<IValue<Object>> set : valueSets) {
-			toStringBuilder.append(", values" + setIndex + "=" + set);
-			setIndex++;
-		}
+        int setIndex = 0;
+        for (Set<IValue<Object>> set : valueSets) {
+            toStringBuilder.append(", values" + setIndex + "=" + set);
+            setIndex++;
+        }
 
-		toStringBuilder.append("]");
+        toStringBuilder.append("]");
 
-		return toStringBuilder.toString();
-	}
+        return toStringBuilder.toString();
+    }
 }

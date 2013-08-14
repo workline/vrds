@@ -14,46 +14,43 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @SequenceGenerator(name = "stringValueIdSequenceGenerator", sequenceName = "SEQ_STRING_VALUE_ID", initialValue = 1, allocationSize = 1000)
 public class StringValue implements IValue<String>, Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stringValueIdSequenceGenerator")
-	private Long id;
-	private String value;
-	@ManyToOne
-	private Attribute ownerAttribute;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stringValueIdSequenceGenerator")
+    private Long id;
+    private String value;
+    @ManyToOne
+    private Attribute ownerAttribute;
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	@JsonIgnore
-	public Attribute getOwnerAttribute() {
-		return ownerAttribute;
-	}
+    @JsonIgnore
+    public Attribute getOwnerAttribute() {
+        return ownerAttribute;
+    }
 
-	public void setOwnerAttribute(Attribute attribute) {
-		this.ownerAttribute = attribute;
-	}
+    public void setOwnerAttribute(Attribute attribute) {
+        this.ownerAttribute = attribute;
+    }
 
-	@Override
-	public String toString() {
-		return "StringValue [id=" + id + ", value=" + value
-				+ ", ownerAttributeId="
-				+ (ownerAttribute == null ? "N/A" : ownerAttribute.getId())
-				+ "]";
-	}
+    @Override
+    public String toString() {
+        return "StringValue [id=" + id + ", value=" + value + ", ownerAttributeId=" + (ownerAttribute == null ? "N/A" : ownerAttribute.getId()) + "]";
+    }
 
 }
