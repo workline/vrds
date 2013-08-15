@@ -17,12 +17,18 @@ import javax.persistence.Inheritance;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import vrds.meta.Coupling;
+import vrds.meta.CouplingTag;
+
+@Coupling(tags = { CouplingTag.ATTRIBUTE_TYPE }, value = "The number of Set<...> ...Values should correspond to the number of attribute types.")
 @Entity
 @Inheritance
 @DiscriminatorColumn(name = "ATTRIBUTE_TYPE")
 @SequenceGenerator(name = "attributeIdSequenceGenerator", sequenceName = "SEQ_ATTRIBUTE_ID", initialValue = 1, allocationSize = 1000)
 public abstract class Attribute implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    private static final String ATTRIBUTE_VALUES = "ATTRIBUTE_VALUES";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attributeIdSequenceGenerator")
@@ -31,6 +37,7 @@ public abstract class Attribute implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
     protected Set<MetaAttribute> metaAttributes;
 
+    @Coupling(tags = { CouplingTag.INNER }, value = ATTRIBUTE_VALUES + ": Add all Set<...> ...Values to the gathering result!")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
     protected Set<StringValue> stringValues;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
@@ -173,6 +180,7 @@ public abstract class Attribute implements Serializable {
         }
     }
 
+    @Coupling(tags = { CouplingTag.INNER }, value = ATTRIBUTE_VALUES + ": Add all Set<...> ...Values!")
     private List<Set<IValue<Object>>> gatherValueSets() {
         @SuppressWarnings("unchecked")
         Set<IValue<Object>>[] valueSets = new Set[] { stringValues, repoItemValues, attributeValues };

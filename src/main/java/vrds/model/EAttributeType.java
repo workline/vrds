@@ -3,10 +3,14 @@ package vrds.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import vrds.meta.Coupling;
+import vrds.meta.CouplingTag;
+
+@Coupling(tags = { CouplingTag.ATTRIBUTE_TYPE })
 public enum EAttributeType {
     STRING {
         @Override
-        public void setSimpleValue(Attribute attribute, Object value) {
+        protected void setSimpleValue(Attribute attribute, Object value) {
             String valueAsString = (String) value;
 
             StringValue stringValue = new StringValue();
@@ -17,7 +21,7 @@ public enum EAttributeType {
         }
 
         @Override
-        public void setValue(Attribute attribute, IValue<?> value) {
+        protected void setValue(Attribute attribute, IValue<?> value) {
             StringValue stringValue = (StringValue) value;
 
             Set<StringValue> stringValues = attribute.getStringValues();
@@ -33,72 +37,72 @@ public enum EAttributeType {
     },
     INTEGER {
         @Override
-        public void setSimpleValue(Attribute attribute, Object value) {
+        protected void setSimpleValue(Attribute attribute, Object value) {
             // TODO Implement
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void setValue(Attribute attribute, IValue<?> value) {
+        protected void setValue(Attribute attribute, IValue<?> value) {
             // TODO Implement
             throw new UnsupportedOperationException();
         }
     },
     DECIMAL {
         @Override
-        public void setSimpleValue(Attribute attribute, Object value) {
+        protected void setSimpleValue(Attribute attribute, Object value) {
             // TODO Implement
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void setValue(Attribute attribute, IValue<?> value) {
+        protected void setValue(Attribute attribute, IValue<?> value) {
             // TODO Implement
             throw new UnsupportedOperationException();
         }
     },
     DATE {
         @Override
-        public void setSimpleValue(Attribute attribute, Object value) {
+        protected void setSimpleValue(Attribute attribute, Object value) {
             // TODO Implement
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void setValue(Attribute attribute, IValue<?> value) {
+        protected void setValue(Attribute attribute, IValue<?> value) {
             // TODO Implement
             throw new UnsupportedOperationException();
         }
     },
     TIME {
         @Override
-        public void setSimpleValue(Attribute attribute, Object value) {
+        protected void setSimpleValue(Attribute attribute, Object value) {
             // TODO Implement
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void setValue(Attribute attribute, IValue<?> value) {
+        protected void setValue(Attribute attribute, IValue<?> value) {
             // TODO Implement
             throw new UnsupportedOperationException();
         }
     },
     DATETIME {
         @Override
-        public void setSimpleValue(Attribute attribute, Object value) {
+        protected void setSimpleValue(Attribute attribute, Object value) {
             // TODO Implement
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void setValue(Attribute attribute, IValue<?> value) {
+        protected void setValue(Attribute attribute, IValue<?> value) {
             // TODO Implement
             throw new UnsupportedOperationException();
         }
     },
     REPO_ITEM {
         @Override
-        public void setSimpleValue(Attribute attribute, Object value) {
+        protected void setSimpleValue(Attribute attribute, Object value) {
             RepoItem valueAsRepoItem = (RepoItem) value;
 
             RepoItemValue repoItemValue = new RepoItemValue();
@@ -109,7 +113,7 @@ public enum EAttributeType {
         }
 
         @Override
-        public void setValue(Attribute attribute, IValue<?> value) {
+        protected void setValue(Attribute attribute, IValue<?> value) {
             RepoItemValue repoItemValue = (RepoItemValue) value;
 
             Set<RepoItemValue> repoItemValues = attribute.getRepoItemValues();
@@ -125,7 +129,7 @@ public enum EAttributeType {
     },
     ATTRIBUTE {
         @Override
-        public void setSimpleValue(Attribute attribute, Object value) {
+        protected void setSimpleValue(Attribute attribute, Object value) {
             Attribute valueAsAttribute = (Attribute) value;
 
             AttributeValue attributeValue = new AttributeValue();
@@ -136,7 +140,7 @@ public enum EAttributeType {
         }
 
         @Override
-        public void setValue(Attribute attribute, IValue<?> value) {
+        protected void setValue(Attribute attribute, IValue<?> value) {
             AttributeValue attributeValue = (AttributeValue) value;
 
             Set<AttributeValue> attributeValues = attribute.getAttributeValues();
