@@ -2,13 +2,14 @@ package vrds.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +20,7 @@ import javax.persistence.SequenceGenerator;
 
 import vrds.meta.Coupling;
 import vrds.meta.CouplingTag;
+import vrds.util.Util;
 
 @Coupling(tags = { CouplingTag.ATTRIBUTE_TYPE }, value = "The number of Set<...> ...Values should correspond to the number of attribute types.")
 @Entity
@@ -34,6 +36,10 @@ public abstract class Attribute implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attributeIdSequenceGenerator")
     protected Long id;
 
+    protected String name;
+    @Enumerated(EnumType.STRING)
+    protected EAttributeType type;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
     protected Set<MetaAttribute> metaAttributes;
 
@@ -44,8 +50,6 @@ public abstract class Attribute implements Serializable {
     protected Set<RepoItemValue> repoItemValues;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
     protected Set<AttributeValue> attributeValues;
-
-    public abstract AttributeDefinition getDefinition();
 
     // TODO Add rest of the dependencies
 
@@ -91,29 +95,8 @@ public abstract class Attribute implements Serializable {
         return values;
     }
 
-    public MetaAttribute getMetaAttribute(String attributeDefinitionName) {
-        MetaAttribute metaAttribute;
-
-        if (attributeDefinitionName == null || "".equals(attributeDefinitionName.trim())) {
-            metaAttribute = null;
-        } else {
-            metaAttribute = null;
-
-            boolean found = false;
-            Iterator<MetaAttribute> attributesIterator = metaAttributes.iterator();
-
-            while(!found && attributesIterator.hasNext()) {
-                MetaAttribute currentMetaAttribute = attributesIterator.next();
-                String currentMetaAttributeDefinitionName = currentMetaAttribute.getDefinition().getName();
-
-                if (attributeDefinitionName.equals(currentMetaAttributeDefinitionName)) {
-                    metaAttribute = currentMetaAttribute;
-                    found = true;
-                }
-            }
-        }
-
-        return metaAttribute;
+    public MetaAttribute getMetaAttribute(String attributeName) {
+        return Util.getAttribute(attributeName, metaAttributes);
     }
 
     // TODO Add rest of the dependencies
@@ -134,6 +117,27 @@ public abstract class Attribute implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setNameAndType(String name, EAttributeType type) {
+        setName(name);
+        setType(type);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public EAttributeType getType() {
+        return type;
+    }
+
+    public void setType(EAttributeType type) {
+        this.type = type;
     }
 
     public Set<MetaAttribute> getMetaAttributes() {
@@ -204,8 +208,36 @@ public abstract class Attribute implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder toStringBuilder = new StringBuilder(getToStringPrefix());
+        StringBuilder toStringBuilder = initToString();
 
+        addInheritedToString(toStringBuilder);
+
+        addValuesToString(toStringBuilder);
+
+        finishToString(toStringBuilder);
+
+        return toStringBuilder.toString();
+    }
+
+    private StringBuilder initToString() {
+        StringBuilder toStringBuilder = new StringBuilder();
+
+        toStringBuilder.append(this.getClass().getSimpleName() + " [id=" + id + ", name=" + name + ", " + "type=" + type);
+
+        return toStringBuilder;
+    }
+
+    private void addInheritedToString(StringBuilder toStringBuilder) {
+        String inheritedToString = getInheritedToString();
+
+        if (inheritedToString == null || "".equals(inheritedToString.trim())) {
+            // Do nothing
+        } else {
+            toStringBuilder.append(", " + inheritedToString);
+        }
+    }
+
+    private void addValuesToString(StringBuilder toStringBuilder) {
         List<Set<IValue<Object>>> valueSetList = gatherValueSets();
 
         int setIndex = 0;
@@ -213,13 +245,13 @@ public abstract class Attribute implements Serializable {
             toStringBuilder.append(", values" + setIndex + "=" + set);
             setIndex++;
         }
-
-        toStringBuilder.append("]");
-
-        return toStringBuilder.toString();
     }
 
-    protected String getToStringPrefix() {
-        return "Attribute [id=" + id;
+    private void finishToString(StringBuilder toStringBuilder) {
+        toStringBuilder.append("]");
+    }
+
+    protected String getInheritedToString() {
+        return "";
     }
 }

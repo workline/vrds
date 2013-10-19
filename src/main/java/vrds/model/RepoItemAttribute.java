@@ -12,19 +12,7 @@ public class RepoItemAttribute extends Attribute {
     private static final long serialVersionUID = 1L;
 
     @ManyToOne
-    private RepoAttributeDefinition definition;
-    @ManyToOne
     private RepoItem repoItem;
-
-    @JsonIgnore
-    @Override
-    public RepoAttributeDefinition getDefinition() {
-        return definition;
-    }
-
-    public void setDefinition(RepoAttributeDefinition definition) {
-        this.definition = definition;
-    }
 
     @JsonIgnore
     public RepoItem getRepoItem() {
@@ -36,8 +24,7 @@ public class RepoItemAttribute extends Attribute {
     }
 
     @Override
-    protected String getToStringPrefix() {
-        return "RepoItemAttribute [definitionName=" + (definition == null ? "N/A" : definition.getName()) + ", repoItemId="
-                + (repoItem == null ? "N/A" : repoItem.getId()) + ", id=" + id;
+    protected String getInheritedToString() {
+        return "repoItemId=" + (repoItem == null ? "N/A" : repoItem.getId());
     }
 }

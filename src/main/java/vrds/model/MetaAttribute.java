@@ -12,19 +12,7 @@ public class MetaAttribute extends Attribute {
     private static final long serialVersionUID = 1L;
 
     @ManyToOne
-    private MetaAttributeDefinition definition;
-    @ManyToOne
     private Attribute ownerAttribute;
-
-    @JsonIgnore
-    @Override
-    public MetaAttributeDefinition getDefinition() {
-        return definition;
-    }
-
-    public void setDefinition(MetaAttributeDefinition definition) {
-        this.definition = definition;
-    }
 
     @JsonIgnore
     public Attribute getOwnerAttribute() {
@@ -36,8 +24,7 @@ public class MetaAttribute extends Attribute {
     }
 
     @Override
-    protected String getToStringPrefix() {
-        return "MetaAttribute [definitionName=" + (definition == null ? "N/A" : definition.getName()) + ", " + "ownerAttributeId="
-                + (ownerAttribute == null ? "N/A" : ownerAttribute.getId()) + ", id=" + id;
+    protected String getInheritedToString() {
+        return "ownerAttributeId=" + (ownerAttribute == null ? "N/A" : ownerAttribute.getId().toString());
     }
 }
