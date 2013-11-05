@@ -1,11 +1,11 @@
-package vrds.meta;
+package vrds.model.meta;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.SOURCE)
-public @interface Coupling {
-    CouplingTag[] tags() default {};
+public @interface LambdaCandidate {
+    LambdaCandidateTag[] tags() default {};
 
     String value() default "";
 }

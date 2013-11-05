@@ -3,9 +3,9 @@ package vrds.util;
 import java.util.Iterator;
 import java.util.Set;
 
-import vrds.meta.LambdaCandidate;
-import vrds.meta.LambdaCandidateTag;
 import vrds.model.Attribute;
+import vrds.model.meta.LambdaCandidate;
+import vrds.model.meta.LambdaCandidateTag;
 
 public final class Util {
     private Util() {

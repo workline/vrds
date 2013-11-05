@@ -11,12 +11,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
-import vrds.meta.LambdaCandidate;
-import vrds.meta.LambdaCandidateTag;
+import vrds.model.attributetype.AttributeValueHandler;
+import vrds.model.meta.LambdaCandidate;
+import vrds.model.meta.LambdaCandidateTag;
+import vrds.model.meta.TODO;
 import vrds.util.Util;
 
 @Entity
+@Table(name = "repo_item")
 @SequenceGenerator(name = "repoItemIdSequenceGenerator", sequenceName = "SEQ_REPO_ITEM_ID", initialValue = 1, allocationSize = 1000)
 public class RepoItem implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -40,6 +44,10 @@ public class RepoItem implements Serializable {
         return attributeValue;
     }
 
+    public <T, W extends IValue<T>> T getValue(String attributeName, AttributeValueHandler<T, W> attributeValueHandler) {
+        return attributeValueHandler.getValue(getAttribute(attributeName));
+    }
+
     public Set<IValue<Object>> getValues(String attributeName) {
         Set<IValue<Object>> attributeValues = getAttribute(attributeName).getValues();
 
@@ -51,15 +59,21 @@ public class RepoItem implements Serializable {
         return (T) getValue(attributeName);
     }
 
+    @TODO("Maybe should throw an exception when the attribute doesn't exist or access is not granted.")
     @LambdaCandidate(tags = { LambdaCandidateTag.GET_SET_ATTRIBUTE_VALUE })
-    public void setValue(String attributeName, Object value) {
+    public boolean setValue(String attributeName, Object value) {
+        boolean valueHasBeenSet = false;
+
         for (RepoItemAttribute currentAttribute : repoItemAttributes) {
             String currentAttributeName = currentAttribute.getName();
             if (attributeName.equals(currentAttributeName)) {
                 currentAttribute.setValue(value);
+                valueHasBeenSet = true;
                 break;
             }
         }
+
+        return valueHasBeenSet;
     }
 
     public Long getId() {

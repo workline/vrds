@@ -18,8 +18,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
-import vrds.meta.Coupling;
-import vrds.meta.CouplingTag;
+import vrds.model.meta.Coupling;
+import vrds.model.meta.CouplingTag;
 import vrds.util.Util;
 
 @Coupling(tags = { CouplingTag.ATTRIBUTE_TYPE }, value = "The number of Set<...> ...Values should correspond to the number of attribute types.")
@@ -47,6 +47,8 @@ public abstract class Attribute implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
     protected Set<StringValue> stringValues;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
+    protected Set<LongValue> longValues;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
     protected Set<RepoItemValue> repoItemValues;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
     protected Set<AttributeValue> attributeValues;
@@ -73,7 +75,17 @@ public abstract class Attribute implements Serializable {
     }
 
     public void setValue(Object value) {
-        EAttributeType.setValue(value, this);
+        if (value == null) {
+            clearValues();
+        } else {
+            if (value instanceof IValue) {
+                @SuppressWarnings("rawtypes")
+                IValue iValue = (IValue) value;
+                type.getAttributeValueHandler().setValue(iValue, this);
+            } else {
+                type.getAttributeValueHandler().setSimpleValue(value, this);
+            }
+        }
     }
 
     public Set<IValue<Object>> getValues() {
@@ -162,6 +174,17 @@ public abstract class Attribute implements Serializable {
         }
     }
 
+    public Set<LongValue> getLongValues() {
+        return longValues;
+    }
+
+    public void setLongValues(Set<LongValue> longValues) {
+        this.longValues = longValues;
+        for (LongValue longValue : longValues) {
+            longValue.setOwnerAttribute(this);
+        }
+    }
+
     public Set<RepoItemValue> getRepoItemValues() {
         return repoItemValues;
     }
@@ -187,7 +210,7 @@ public abstract class Attribute implements Serializable {
     @Coupling(tags = { CouplingTag.INNER }, value = ATTRIBUTE_VALUES + ": Add all Set<...> ...Values!")
     private List<Set<IValue<Object>>> gatherValueSets() {
         @SuppressWarnings("unchecked")
-        Set<IValue<Object>>[] valueSets = new Set[] { stringValues, repoItemValues, attributeValues };
+        Set<IValue<Object>>[] valueSets = new Set[] { stringValues, longValues, repoItemValues, attributeValues };
 
         List<Set<IValue<Object>>> valueSetList = Arrays.asList(valueSets);
 

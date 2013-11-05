@@ -18,7 +18,7 @@ public class LongValue implements IValue<Long>, Serializable {
     private Long id;
     private Long value;
     @ManyToOne
-    private Attribute attribute;
+    private Attribute ownerAttribute;
 
     public Long getId() {
         return id;
@@ -37,17 +37,17 @@ public class LongValue implements IValue<Long>, Serializable {
     }
 
     @JsonIgnore
-    public Attribute getAttribute() {
-        return attribute;
+    public Attribute getOwnerAttribute() {
+        return ownerAttribute;
     }
 
-    public void setAttribute(Attribute attribute) {
-        this.attribute = attribute;
+    public void setOwnerAttribute(Attribute attribute) {
+        this.ownerAttribute = attribute;
     }
 
     @Override
     public String toString() {
-        return "StringValue [id=" + id + ", value=" + value + ", attributeId=" + (attribute == null ? "N/A" : attribute.getId()) + "]";
+        return "StringValue [id=" + id + ", value=" + value + ", attributeId=" + (ownerAttribute == null ? "N/A" : ownerAttribute.getId()) + "]";
     }
 
 }
