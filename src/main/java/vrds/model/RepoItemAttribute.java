@@ -24,7 +24,7 @@ public class RepoItemAttribute extends Attribute {
     }
 
     @Override
-    protected String getInheritedToString() {
+    protected String getInheritedToStringPart() {
         return "repoItemId=" + (repoItem == null ? "N/A" : repoItem.getId());
     }
 }

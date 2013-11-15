@@ -251,12 +251,12 @@ public abstract class Attribute implements Serializable {
     }
 
     private void addInheritedToString(StringBuilder toStringBuilder) {
-        String inheritedToString = getInheritedToString();
+        String inheritedToStringPart = getInheritedToStringPart();
 
-        if (inheritedToString == null || "".equals(inheritedToString.trim())) {
+        if (inheritedToStringPart == null || "".equals(inheritedToStringPart.trim())) {
             // Do nothing
         } else {
-            toStringBuilder.append(", " + inheritedToString);
+            toStringBuilder.append(", " + inheritedToStringPart);
         }
     }
 
@@ -274,7 +274,7 @@ public abstract class Attribute implements Serializable {
         toStringBuilder.append("]");
     }
 
-    protected String getInheritedToString() {
+    protected String getInheritedToStringPart() {
         return "";
     }
 }

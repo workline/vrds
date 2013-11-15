@@ -24,7 +24,7 @@ public class MetaAttribute extends Attribute {
     }
 
     @Override
-    protected String getInheritedToString() {
+    protected String getInheritedToStringPart() {
         return "ownerAttributeId=" + (ownerAttribute == null ? "N/A" : ownerAttribute.getId().toString());
     }
 }

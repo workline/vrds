@@ -1,6 +1,5 @@
 package vrds.util;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import vrds.model.Attribute;
@@ -20,16 +19,12 @@ public final class Util {
         } else {
             attribute = null;
 
-            boolean found = false;
-            Iterator<T> attributesIterator = attributes.iterator();
-
-            while(!found && attributesIterator.hasNext()) {
-                T currentAttribute = attributesIterator.next();
+            for (T currentAttribute : attributes) {
                 String currentAttributeName = currentAttribute.getName();
 
                 if (queryAttributeName.equals(currentAttributeName)) {
                     attribute = currentAttribute;
-                    found = true;
+                    break;
                 }
             }
         }

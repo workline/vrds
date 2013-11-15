@@ -38,6 +38,18 @@ public class RepoItem implements Serializable {
         return Util.getAttribute(attributeName, repoItemAttributes);
     }
 
+    public boolean hasAttribute(String attributeName) {
+        boolean hasAttribute;
+
+        if (getAttribute(attributeName) == null) {
+            hasAttribute = false;
+        } else {
+            hasAttribute = true;
+        }
+
+        return hasAttribute;
+    }
+
     public Object getValue(String attributeName) {
         Object attributeValue = getAttribute(attributeName).getValue();
 
