@@ -5,7 +5,10 @@ import java.util.Set;
 import vrds.model.Attribute;
 import vrds.model.EAttributeType;
 import vrds.model.StringValue;
+import vrds.model.meta.TODO;
+import vrds.model.meta.TODOTag;
 
+@TODO(tags = { TODOTag.SINGLETON })
 public class StringAttributeValueHandler extends AttributeValueHandler<String, StringValue> {
     private StringAttributeValueHandler() {
     }
@@ -22,13 +25,13 @@ public class StringAttributeValueHandler extends AttributeValueHandler<String, S
     }
 
     @Override
-    protected Set<StringValue> getValueWrappers(Attribute attribute) {
-        return attribute.getStringValues();
+    public void setValues(Attribute attribute, Set<StringValue> valueWrappers) {
+        attribute.setStringValues(valueWrappers);
     }
 
     @Override
-    protected void setValues(Attribute attribute, Set<StringValue> valueWrappers) {
-        attribute.setStringValues(valueWrappers);
+    protected Set<StringValue> getValueWrappers(Attribute attribute) {
+        return attribute.getStringValues();
     }
 
     @Override

@@ -2,6 +2,7 @@ package vrds.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
+import vrds.model.attributetype.AttributeValueHandler;
 import vrds.model.meta.Coupling;
 import vrds.model.meta.CouplingTag;
 import vrds.util.Util;
@@ -30,7 +32,7 @@ import vrds.util.Util;
 public abstract class Attribute implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private static final String ATTRIBUTE_VALUES = "ATTRIBUTE_VALUES";
+    private static final String VALUE_SETS = "VALUE_SETS";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "attributeIdSequenceGenerator")
@@ -41,29 +43,44 @@ public abstract class Attribute implements Serializable {
     protected EAttributeType type;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
-    protected Set<MetaAttribute> metaAttributes;
+    protected Set<MetaAttribute> metaAttributes = new HashSet<>();
 
-    @Coupling(tags = { CouplingTag.INNER }, value = ATTRIBUTE_VALUES + ": Add all Set<...> ...Values to the gathering result!")
+    @Coupling(tags = { CouplingTag.INNER }, value = VALUE_SETS + ": Add all Set<...> ...Values to the gathering result!")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
-    protected Set<StringValue> stringValues;
+    protected Set<StringValue> stringValues = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
-    protected Set<LongValue> longValues;
+    protected Set<IntegerValue> integerValues = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
-    protected Set<RepoItemValue> repoItemValues;
+    protected Set<RepoItemValue> repoItemValues = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "ownerAttribute")
-    protected Set<AttributeValue> attributeValues;
+    protected Set<AttributeValue> attributeValues = new HashSet<>();
 
     // TODO Add rest of the dependencies
+
+    public void clearValues() {
+        List<Set<IValueWrapper<Object>>> valueSetList = gatherValueSets();
+
+        for (Set<IValueWrapper<Object>> set : valueSetList) {
+            if (set != null) {
+                set.clear();
+            }
+        }
+    }
+
+    public void setNameAndType(String name, EAttributeType type) {
+        setName(name);
+        setType(type);
+    }
 
     public Object getValue() {
         Object value;
 
-        List<Set<IValue<Object>>> valueSetList = gatherValueSets();
+        List<Set<IValueWrapper<Object>>> valueSetList = gatherValueSets();
 
         value = null;
         boolean found = false;
         for (int listIndex = 0; !found && listIndex < valueSetList.size(); listIndex++) {
-            Set<IValue<Object>> valueSet = valueSetList.get(listIndex);
+            Set<IValueWrapper<Object>> valueSet = valueSetList.get(listIndex);
             value = getValue(valueSet);
 
             if (value != null) {
@@ -74,29 +91,19 @@ public abstract class Attribute implements Serializable {
         return value;
     }
 
-    public void setValue(Object value) {
-        if (value == null) {
-            clearValues();
-        } else {
-            if (value instanceof IValue) {
-                @SuppressWarnings("rawtypes")
-                IValue iValue = (IValue) value;
-                type.getAttributeValueHandler().setValue(iValue, this);
-            } else {
-                type.getAttributeValueHandler().setSimpleValue(value, this);
-            }
-        }
+    public <T, W extends IValueWrapper<T>> T getValue(AttributeValueHandler<T, W> attributeValueHandler) {
+        return attributeValueHandler.getValue(this);
     }
 
-    public Set<IValue<Object>> getValues() {
-        Set<IValue<Object>> values;
+    public Set<IValueWrapper<Object>> getValues() {
+        Set<IValueWrapper<Object>> values;
 
-        List<Set<IValue<Object>>> valueSetList = gatherValueSets();
+        List<Set<IValueWrapper<Object>>> valueSetList = gatherValueSets();
 
         values = null;
         boolean found = false;
         for (int listIndex = 0; !found && listIndex < valueSetList.size(); listIndex++) {
-            Set<IValue<Object>> valueSet = valueSetList.get(listIndex);
+            Set<IValueWrapper<Object>> valueSet = valueSetList.get(listIndex);
 
             if (valueSet != null && !valueSet.isEmpty()) {
                 values = valueSet;
@@ -107,21 +114,49 @@ public abstract class Attribute implements Serializable {
         return values;
     }
 
+    public void setValue(Object value) {
+        if (value == null) {
+            clearValues();
+        } else {
+            if (value instanceof IValueWrapper) {
+                @SuppressWarnings("rawtypes")
+                IValueWrapper valueWrapper = (IValueWrapper) value;
+                type.getAttributeValueHandler().setValue(valueWrapper, this);
+            } else {
+                type.getAttributeValueHandler().setSimpleValue(value, this);
+            }
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes" })
+    public IValueWrapper<?> addValue(Object value) {
+        IValueWrapper<?> valueWrapper;
+
+        if (value != null) {
+            if (value instanceof IValueWrapper) {
+                valueWrapper = (IValueWrapper) value;
+                type.getAttributeValueHandler().addValue(valueWrapper, this);
+            } else {
+                valueWrapper = type.getAttributeValueHandler().addSimpleValue(value, this);
+            }
+        } else {
+            valueWrapper = null;
+        }
+
+        return valueWrapper;
+    }
+
     public MetaAttribute getMetaAttribute(String attributeName) {
         return Util.getAttribute(attributeName, metaAttributes);
     }
 
     // TODO Add rest of the dependencies
 
-    public void clearValues() {
-        List<Set<IValue<Object>>> valueSetList = gatherValueSets();
-
-        for (Set<IValue<Object>> set : valueSetList) {
-            if (set != null) {
-                set.clear();
-            }
-        }
+    public <T, W extends IValueWrapper<T>> T getMetaAttributeValue(String attributeName, AttributeValueHandler<T, W> attributeValueHandler) {
+        return attributeValueHandler.getValue(getMetaAttribute(attributeName));
     }
+
+    // TODO Add rest of the dependencies
 
     public Long getId() {
         return id;
@@ -129,11 +164,6 @@ public abstract class Attribute implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setNameAndType(String name, EAttributeType type) {
-        setName(name);
-        setType(type);
     }
 
     public String getName() {
@@ -174,14 +204,14 @@ public abstract class Attribute implements Serializable {
         }
     }
 
-    public Set<LongValue> getLongValues() {
-        return longValues;
+    public Set<IntegerValue> getLongValues() {
+        return integerValues;
     }
 
-    public void setLongValues(Set<LongValue> longValues) {
-        this.longValues = longValues;
-        for (LongValue longValue : longValues) {
-            longValue.setOwnerAttribute(this);
+    public void setLongValues(Set<IntegerValue> integerValues) {
+        this.integerValues = integerValues;
+        for (IntegerValue integerValue : integerValues) {
+            integerValue.setOwnerAttribute(this);
         }
     }
 
@@ -207,17 +237,17 @@ public abstract class Attribute implements Serializable {
         }
     }
 
-    @Coupling(tags = { CouplingTag.INNER }, value = ATTRIBUTE_VALUES + ": Add all Set<...> ...Values!")
-    private List<Set<IValue<Object>>> gatherValueSets() {
+    @Coupling(tags = { CouplingTag.INNER }, value = VALUE_SETS + ": Add all Set<...> ...Values!")
+    private List<Set<IValueWrapper<Object>>> gatherValueSets() {
         @SuppressWarnings("unchecked")
-        Set<IValue<Object>>[] valueSets = new Set[] { stringValues, longValues, repoItemValues, attributeValues };
+        Set<IValueWrapper<Object>>[] valueSets = new Set[] { stringValues, integerValues, repoItemValues, attributeValues };
 
-        List<Set<IValue<Object>>> valueSetList = Arrays.asList(valueSets);
+        List<Set<IValueWrapper<Object>>> valueSetList = Arrays.asList(valueSets);
 
         return valueSetList;
     }
 
-    private <T, V extends IValue<T>> T getValue(Set<V> set) {
+    private <T, V extends IValueWrapper<T>> T getValue(Set<V> set) {
         T value;
 
         if (set != null && !set.isEmpty()) {
@@ -261,10 +291,10 @@ public abstract class Attribute implements Serializable {
     }
 
     private void addValuesToString(StringBuilder toStringBuilder) {
-        List<Set<IValue<Object>>> valueSetList = gatherValueSets();
+        List<Set<IValueWrapper<Object>>> valueSetList = gatherValueSets();
 
         int setIndex = 0;
-        for (Set<IValue<Object>> set : valueSetList) {
+        for (Set<IValueWrapper<Object>> set : valueSetList) {
             toStringBuilder.append(", values" + setIndex + "=" + set);
             setIndex++;
         }

@@ -2,6 +2,7 @@ package vrds.model;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -12,6 +13,7 @@ public class RepoItemAttribute extends Attribute {
     private static final long serialVersionUID = 1L;
 
     @ManyToOne
+    @JoinColumn(name = "repo_item_id")
     private RepoItem repoItem;
 
     @JsonIgnore

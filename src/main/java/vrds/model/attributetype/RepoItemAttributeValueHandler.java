@@ -6,7 +6,10 @@ import vrds.model.Attribute;
 import vrds.model.EAttributeType;
 import vrds.model.RepoItem;
 import vrds.model.RepoItemValue;
+import vrds.model.meta.TODO;
+import vrds.model.meta.TODOTag;
 
+@TODO(tags = { TODOTag.SINGLETON })
 public class RepoItemAttributeValueHandler extends AttributeValueHandler<RepoItem, RepoItemValue> {
     private RepoItemAttributeValueHandler() {
     }
@@ -23,13 +26,13 @@ public class RepoItemAttributeValueHandler extends AttributeValueHandler<RepoIte
     }
 
     @Override
-    protected Set<RepoItemValue> getValueWrappers(Attribute attribute) {
-        return attribute.getRepoItemValues();
+    public void setValues(Attribute attribute, Set<RepoItemValue> valueWrappers) {
+        attribute.setRepoItemValues(valueWrappers);
     }
 
     @Override
-    protected void setValues(Attribute attribute, Set<RepoItemValue> valueWrappers) {
-        attribute.setRepoItemValues(valueWrappers);
+    protected Set<RepoItemValue> getValueWrappers(Attribute attribute) {
+        return attribute.getRepoItemValues();
     }
 
     @Override

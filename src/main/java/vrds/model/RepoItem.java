@@ -1,6 +1,7 @@
 package vrds.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -32,7 +33,7 @@ public class RepoItem implements Serializable {
     private String repoName;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "repoItem")
-    private Set<RepoItemAttribute> repoItemAttributes;
+    private Set<RepoItemAttribute> repoItemAttributes = new HashSet<>();
 
     public RepoItemAttribute getAttribute(String attributeName) {
         return Util.getAttribute(attributeName, repoItemAttributes);
@@ -56,19 +57,14 @@ public class RepoItem implements Serializable {
         return attributeValue;
     }
 
-    public <T, W extends IValue<T>> T getValue(String attributeName, AttributeValueHandler<T, W> attributeValueHandler) {
+    public <T, W extends IValueWrapper<T>> T getValue(String attributeName, AttributeValueHandler<T, W> attributeValueHandler) {
         return attributeValueHandler.getValue(getAttribute(attributeName));
     }
 
-    public Set<IValue<Object>> getValues(String attributeName) {
-        Set<IValue<Object>> attributeValues = getAttribute(attributeName).getValues();
+    public <T, W extends IValueWrapper<T>> Set<T> getValues(String attributeName, AttributeValueHandler<T, W> attributeValueHandler) {
+        Set<T> values = attributeValueHandler.getValues(getAttribute(attributeName));
 
-        return attributeValues;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T getTypedValue(String attributeName) {
-        return (T) getValue(attributeName);
+        return values;
     }
 
     @TODO("Maybe should throw an exception when the attribute doesn't exist or access is not granted.")
@@ -86,6 +82,49 @@ public class RepoItem implements Serializable {
         }
 
         return valueHasBeenSet;
+    }
+
+    public IValueWrapper<?> addValue(String attributeName, Object value) {
+        IValueWrapper<?> valueWrapper = null;
+
+        for (RepoItemAttribute currentAttribute : repoItemAttributes) {
+            String currentAttributeName = currentAttribute.getName();
+            if (attributeName.equals(currentAttributeName)) {
+                valueWrapper = currentAttribute.addValue(value);
+                break;
+            }
+        }
+
+        return valueWrapper;
+    }
+
+    public IValueWrapper<Object> getValueWrapper(String attributeName, RepoItem benefactor) {
+        IValueWrapper<Object> resultValueWrapper = null;
+
+        Set<IValueWrapper<Object>> valueWrappers = getValueWrappers(attributeName);
+
+        for (IValueWrapper<Object> valueWrapper : valueWrappers) {
+            if (isValueOwnOrDoesBenefactorMatch(benefactor, valueWrapper)) {
+                resultValueWrapper = valueWrapper;
+            }
+        }
+
+        return resultValueWrapper;
+    }
+
+    public Set<IValueWrapper<Object>> getValueWrappers(String attributeName) {
+        Set<IValueWrapper<Object>> values = getAttribute(attributeName).getValues();
+
+        return values;
+    }
+
+    private boolean isValueOwnOrDoesBenefactorMatch(RepoItem benefactor, IValueWrapper<Object> valueWrapper) {
+        RepoItem ourBenefactor = valueWrapper.getBenefactor();
+
+        boolean isValueOwn = benefactor == null && ourBenefactor == null;
+        boolean doesBenefactorMatch = benefactor != null && benefactor.equals(ourBenefactor);
+
+        return isValueOwn || doesBenefactorMatch;
     }
 
     public Long getId() {
