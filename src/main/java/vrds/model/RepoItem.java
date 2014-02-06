@@ -103,9 +103,11 @@ public class RepoItem implements Serializable {
 
         Set<IValueWrapper<Object>> valueWrappers = getValueWrappers(attributeName);
 
-        for (IValueWrapper<Object> valueWrapper : valueWrappers) {
-            if (isValueOwnOrDoesBenefactorMatch(benefactor, valueWrapper)) {
-                resultValueWrapper = valueWrapper;
+        if (valueWrappers != null) {
+            for (IValueWrapper<Object> valueWrapper : valueWrappers) {
+                if (isValueOwnOrDoesBenefactorMatch(benefactor, valueWrapper)) {
+                    resultValueWrapper = valueWrapper;
+                }
             }
         }
 

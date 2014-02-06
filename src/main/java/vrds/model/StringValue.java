@@ -2,6 +2,7 @@ package vrds.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +21,7 @@ public class StringValue implements IValueWrapper<String>, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stringValueIdSequenceGenerator")
     private Long id;
+    @Column(length = 4000)
     private String value;
 
     @ManyToOne
