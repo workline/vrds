@@ -81,7 +81,7 @@ public abstract class Attribute implements Serializable {
         boolean found = false;
         for (int listIndex = 0; !found && listIndex < valueSetList.size(); listIndex++) {
             Set<IValueWrapper<Object>> valueSet = valueSetList.get(listIndex);
-            value = getValue(valueSet);
+            value = _getValue(valueSet);
 
             if (value != null) {
                 found = true;
@@ -247,7 +247,7 @@ public abstract class Attribute implements Serializable {
         return valueSetList;
     }
 
-    private <T, V extends IValueWrapper<T>> T getValue(Set<V> set) {
+    private <T, V extends IValueWrapper<T>> T _getValue(Set<V> set) {
         T value;
 
         if (set != null && !set.isEmpty()) {

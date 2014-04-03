@@ -98,14 +98,14 @@ public class RepoItem implements Serializable {
         return valueWrapper;
     }
 
-    public IValueWrapper<Object> getValueWrapper(String attributeName, RepoItem benefactor) {
+    public IValueWrapper<Object> getValueWrapper(String attributeName, RepoItem inheritenceSource) {
         IValueWrapper<Object> resultValueWrapper = null;
 
         Set<IValueWrapper<Object>> valueWrappers = getValueWrappers(attributeName);
 
         if (valueWrappers != null) {
             for (IValueWrapper<Object> valueWrapper : valueWrappers) {
-                if (isValueOwnOrDoesBenefactorMatch(benefactor, valueWrapper)) {
+                if (isValueOwnOrDoesInheritenceSourceMatch(inheritenceSource, valueWrapper)) {
                     resultValueWrapper = valueWrapper;
                 }
             }
@@ -120,13 +120,13 @@ public class RepoItem implements Serializable {
         return values;
     }
 
-    private boolean isValueOwnOrDoesBenefactorMatch(RepoItem benefactor, IValueWrapper<Object> valueWrapper) {
-        RepoItem ourBenefactor = valueWrapper.getBenefactor();
+    private boolean isValueOwnOrDoesInheritenceSourceMatch(RepoItem inheritenceSource, IValueWrapper<Object> valueWrapper) {
+        RepoItem ourInheritenceSource = valueWrapper.getInheritenceSource();
 
-        boolean isValueOwn = benefactor == null && ourBenefactor == null;
-        boolean doesBenefactorMatch = benefactor != null && benefactor.equals(ourBenefactor);
+        boolean isValueOwn = inheritenceSource == null && ourInheritenceSource == null;
+        boolean doesInheritenceSourceMatch = inheritenceSource != null && inheritenceSource.equals(ourInheritenceSource);
 
-        return isValueOwn || doesBenefactorMatch;
+        return isValueOwn || doesInheritenceSourceMatch;
     }
 
     public Long getId() {

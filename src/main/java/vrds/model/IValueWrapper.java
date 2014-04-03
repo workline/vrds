@@ -9,7 +9,7 @@ public interface IValueWrapper<T> {
 
     void setOwnerAttribute(Attribute attribute);
 
-    RepoItem getBenefactor();
+    RepoItem getInheritenceSource();
 
-    void setBenefactor(RepoItem benefactor);
+    void setInheritenceSource(RepoItem inheritenceSource);
 }

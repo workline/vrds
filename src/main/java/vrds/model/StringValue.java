@@ -28,8 +28,8 @@ public class StringValue implements IValueWrapper<String>, Serializable {
     @JoinColumn(name = "owner_attribute_id")
     private Attribute ownerAttribute;
     @ManyToOne
-    @JoinColumn(name = "benefactor_repo_item_id")
-    private RepoItem benefactor;
+    @JoinColumn(name = "inheritence_source_repo_item_id")
+    private RepoItem inheritenceSource;
 
     public Long getId() {
         return id;
@@ -62,19 +62,19 @@ public class StringValue implements IValueWrapper<String>, Serializable {
 
     @JsonIgnore
     @Override
-    public RepoItem getBenefactor() {
-        return benefactor;
+    public RepoItem getInheritenceSource() {
+        return inheritenceSource;
     }
 
     @Override
-    public void setBenefactor(RepoItem benefactor) {
-        this.benefactor = benefactor;
+    public void setInheritenceSource(RepoItem inheritenceSource) {
+        this.inheritenceSource = inheritenceSource;
     }
 
     @Override
     public String toString() {
         return "StringValue [id=" + id + ", ownerAttributeId=" + (ownerAttribute == null ? "N/A" : ownerAttribute.getId()) + ", value=" + value
-                + ", benefactorId=" + (benefactor == null ? "N/A" : benefactor.getId()) + "]";
+                + ", inheritenceSourceId=" + (inheritenceSource == null ? "N/A" : inheritenceSource.getId()) + "]";
     }
 
 }

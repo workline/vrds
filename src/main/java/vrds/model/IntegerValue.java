@@ -22,8 +22,8 @@ public class IntegerValue implements IValueWrapper<Long>, Serializable {
     @JoinColumn(name = "owner_attribute_id")
     private Attribute ownerAttribute;
     @ManyToOne
-    @JoinColumn(name = "benefactor_repo_item_id")
-    private RepoItem benefactor;
+    @JoinColumn(name = "inheritence_source_repo_item_id")
+    private RepoItem inheritenceSource;
 
     public Long getId() {
         return id;
@@ -56,19 +56,20 @@ public class IntegerValue implements IValueWrapper<Long>, Serializable {
 
     @JsonIgnore
     @Override
-    public RepoItem getBenefactor() {
-        return benefactor;
+    public RepoItem getInheritenceSource() {
+        return inheritenceSource;
     }
 
     @Override
-    public void setBenefactor(RepoItem benefactor) {
-        this.benefactor = benefactor;
+    public void setInheritenceSource(RepoItem inheritenceSource) {
+        this.inheritenceSource = inheritenceSource;
     }
 
     @Override
     public String toString() {
-        return "StringValue [id=" + id + ", value=" + value + ", attributeId=" + (ownerAttribute == null ? "N/A" : ownerAttribute.getId()) + ", benefactorId="
-                + (benefactor == null ? "N/A" : benefactor.getId()) + "]";
+        return "StringValue [id=" + id + ", value=" + value + ", attributeId=" + (ownerAttribute == null ? "N/A" : ownerAttribute.getId())
+                + ", inheritenceSourceId="
+                + (inheritenceSource == null ? "N/A" : inheritenceSource.getId()) + "]";
     }
 
 }
